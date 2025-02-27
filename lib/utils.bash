@@ -5,7 +5,7 @@ set -euo pipefail
 # TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for skeema.
 GH_REPO="https://github.com/skeema/skeema"
 TOOL_NAME="skeema"
-TOOL_TEST="skeema version | awk '{print $3}' | cut -d '-' -f 1"
+TOOL_TEST="skeema version"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
