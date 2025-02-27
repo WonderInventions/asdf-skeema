@@ -82,9 +82,9 @@ download_release() {
 		fail "Unsupported architecture: $arch"
 	fi
 
-	local url="$GH_REPO/archive/v${version}/skeema_${version}_${platform}_${arch}.tar.gz"
+	local url="$GH_REPO/releases/download/v${version}/skeema_${version}_${platform}_${arch}.tar.gz"
 
-	echo "* Downloading $TOOL_NAME release $version..."
+	echo "* Downloading $TOOL_NAME release $version... from $url"
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
