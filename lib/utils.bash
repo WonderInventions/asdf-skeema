@@ -36,13 +36,53 @@ list_all_versions() {
 	list_github_tags
 }
 
-download_release() {
-	local version filename url
-	version="$1"
-	filename="$2"
+get_platform() {
+	local name=$(uname)
+	case $name in
+		Linux)
+			echo "linux"
+			;;
+		Darwin)
+			echo "mac"
+			;;
+		*)
+			echo "unknown"
+	esac
+}
 
-	# TODO: Adapt the release URL convention for skeema
-	url="$GH_REPO/archive/v${version}.tar.gz"
+get_arch() {
+  local arch=$(uname -m)
+  case $arch in
+    amd64 | x86_64)
+      echo "amd64"
+      ;;
+    arm64 | aarch64)
+      echo "arm64"
+      ;;
+    arm)
+      echo "arm"
+      ;;
+    *)
+      echo "i386"
+  esac
+}
+
+download_release() {
+	local version="$1"
+	local filename="$2"
+  local platform=$(get_platform)
+  local arch=$(get_arch)
+	local supported_platforms=("linux" "mac")
+	local supported_archs=("amd64" "arm64")
+
+	if [[ ! " ${supported_platforms[@]} " =~ " ${platform} " ]]; then
+		fail "Unsupported platform: $platform"
+	fi
+	if [[ ! " ${supported_archs[@]} " =~ " ${arch} " ]]; then
+		fail "Unsupported architecture: $arch"
+	fi
+
+	local url="$GH_REPO/archive/v${version}/skeema_${version}_${platform}_${arch}.tar.gz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
